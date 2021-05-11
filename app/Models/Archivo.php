@@ -3,17 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+class Archivo extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    protected $table = 'archivos';
+    protected $primaryKey = 'arch_id';
 
-    protected $table = 'users';
-    protected $primaryKey = 'matricula';
-
-    public $incrementing = false;
+    public $incrementing = true;
     public $timestamps = true;
 
     /**
@@ -22,9 +20,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'arch_nombre',
+        'arch_materia',
+        'arch_semestre',
+        'arch_privado',
+        'path'
     ];
 
     /**
@@ -33,8 +33,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'path'
     ];
 
     /**
@@ -42,7 +41,5 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected $casts = [];
 }
