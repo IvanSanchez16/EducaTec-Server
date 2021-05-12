@@ -13,7 +13,7 @@ class CreateDescripcionesComentarios extends Migration
      */
     public function up()
     {
-        Schema::create('descripciones_comentarios', function (Blueprint $table) {
+        Schema::create('descComentarios', function (Blueprint $table) {
             $table->bigInteger('dcom_comentario')->unsigned();
             $table->bigInteger('dcom_inc')->unsigned();
             $table->string('descripcion');

@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Descripcion_comentario extends Model
+class Desccomentarios extends Model
 {
     use HasFactory;
 
-    protected $table = 'descripciones_comentarios';
+    protected $table = 'desccomentarios';
     protected $primaryKey = ['dcom_comentario','dcom_inc'];
 
     public $incrementing = false;
@@ -39,4 +39,8 @@ class Descripcion_comentario extends Model
      * @var array
      */
     protected $casts = [];
+
+    public function comentario(){
+        return $this->belongsTo(Comentario::class,'dcom_comentario');
+    }
 }

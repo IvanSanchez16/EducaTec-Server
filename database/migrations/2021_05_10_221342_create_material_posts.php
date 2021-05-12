@@ -13,7 +13,7 @@ class CreateMaterialPosts extends Migration
      */
     public function up()
     {
-        Schema::create('material_posts', function (Blueprint $table) {
+        Schema::create('materialPosts', function (Blueprint $table) {
             $table->bigInteger('mat_post')->unsigned();
             $table->bigInteger('mat_arch')->unsigned();
 

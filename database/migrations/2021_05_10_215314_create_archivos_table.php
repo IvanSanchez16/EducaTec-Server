@@ -20,9 +20,11 @@ class CreateArchivosTable extends Migration
             $table->tinyInteger('arch_semestre')->unsigned();
             $table->boolean('arch_privado');
             $table->string('path');
+            $table->integer('arch_user')->nullable();
             $table->timestamps();
 
             $table->foreign('arch_materia')->references('mat_id')->on('materias');
+            $table->foreign('arch_user')->references('matricula')->on('users');
         });
     }
 

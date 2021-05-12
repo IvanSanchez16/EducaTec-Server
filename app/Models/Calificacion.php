@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Calificaciones extends Model
+class Calificacion extends Model
 {
     use HasFactory;
 
@@ -39,4 +39,16 @@ class Calificaciones extends Model
      * @var array
      */
     protected $casts = [];
+
+    public function user(){
+        return $this->belongsTo(User::class,'cal_user');
+    }
+
+    public function post(){
+        return $this->belongsTo(Post::class,'cal_id');
+    }
+
+    public function comentario(){
+        return $this->belongsTo(Comentario::class,'cal_id');
+    }
 }

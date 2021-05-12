@@ -13,7 +13,7 @@ class CreateDescripcionesPosts extends Migration
      */
     public function up()
     {
-        Schema::create('descripciones_posts', function (Blueprint $table) {
+        Schema::create('descPosts', function (Blueprint $table) {
             $table->bigInteger('dpost_post')->unsigned();
             $table->bigInteger('dpost_inc')->unsigned();
             $table->string('descripcion');

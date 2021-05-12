@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class EditUsers extends Migration
+class EditComentarios extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class EditUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users',function (Blueprint $table){
-            $table->bigInteger('us_tipo_usuario')->unsigned();
+        Schema::table('comentarios',function (Blueprint $table){
+            $table->bigInteger('com_post')->unsigned();
 
-            $table->foreign('us_tipo_usuario')->on('tiposUsuarios')->references('tu_id');
+            $table->foreign('com_post')->on('posts')->references('post_id');
         });
     }
 

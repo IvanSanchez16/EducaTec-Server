@@ -5,15 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Descripcion_Post extends Model
+class Carrera extends Model
 {
     use HasFactory;
+    protected $table = 'carreras';
+    protected $primaryKey = 'car_id';
 
-    protected $table = 'descripciones_posts';
-    protected $primaryKey = ['dpost_post','dpost_inc'];
-
-    public $incrementing = false;
-    public $timestamps = false;
+    public $incrementing = true;
+    public $timestamps = true;
 
     /**
      * The attributes that are mass assignable.
@@ -21,9 +20,7 @@ class Descripcion_Post extends Model
      * @var array
      */
     protected $fillable = [
-        'dpost_post',
-        'dpost_inc',
-        'descripcion'
+        'car_nombre'
     ];
 
     /**
@@ -39,4 +36,8 @@ class Descripcion_Post extends Model
      * @var array
      */
     protected $casts = [];
+
+    public function users(){
+        $this->hasMany(User::class,'us_carrera');
+    }
 }

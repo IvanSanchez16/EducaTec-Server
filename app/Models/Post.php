@@ -37,4 +37,16 @@ class Post extends Model
      * @var array
      */
     protected $casts = [];
+
+    public function user(){
+        return $this->belongsTo(User::class,'post_user');
+    }
+
+    public function descpost(){
+        return $this->hasMany(Descpost::class,'dpost_post');
+    }
+
+    public function calificaciones(){
+        return $this->hasMany(Calificaciones::class,'cal_id');
+    }
 }
