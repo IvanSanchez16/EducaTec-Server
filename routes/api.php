@@ -20,6 +20,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/registro',[AuthController::class,'register']);
+Route::post('/login',[AuthController::class,'login']);
+
 
 Route::middleware(['auth:sanctum'])->group(function (){
     Route::apiResource('archivo',\App\Http\Controllers\ArchivoController::class);
@@ -29,6 +31,8 @@ Route::middleware(['auth:sanctum'])->group(function (){
     Route::apiResource('post',\App\Http\Controllers\PostController::class);
     Route::apiResource('tipoUsuario',\App\Http\Controllers\TipoUsuarioController::class);
     Route::apiResource('user',\App\Http\Controllers\UserController::class);
+
+    Route::post('/logout',[AuthController::class,'logout']);
 });
 
 

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -25,5 +27,28 @@ class AuthController extends Controller
         return response()->json([
             'token' => $token
         ],201);
+    }
+
+    public function login(LoginRequest $request){
+        $email = $request['matricula'].'@itculiacan.edu.mx';
+        $user = User::where('email', $email)->first();
+
+        //Check password
+        if (!Hash::check($request['password'],$user->password) ){
+            return response()->json([
+                'mensaje' => 'La contraseña es incorrecta'
+            ],401);
+        }
+
+        $token = $user->createToken('educatecToken')->plainTextToken;
+        return response()->json([
+            'token' => $token
+        ],201);
+    }
+
+    public function logout(){
+        auth()->user()->tokens()->delete();
+
+        return response()->json([],205);
     }
 }
