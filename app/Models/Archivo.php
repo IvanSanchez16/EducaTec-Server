@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Archivo extends Model
 {
     use HasFactory;
+
     protected $table = 'archivos';
     protected $primaryKey = 'arch_id';
 
@@ -24,7 +25,8 @@ class Archivo extends Model
         'arch_materia',
         'arch_semestre',
         'arch_privado',
-        'path'
+        'path',
+        'arch_user'
     ];
 
     /**
@@ -42,4 +44,17 @@ class Archivo extends Model
      * @var array
      */
     protected $casts = [];
+
+    public function materia(){
+        return $this->belongsTo(Materia::class,'arch_materia');
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class,'arch_user');
+    }
+
+    public function posts(){
+        return $this->belongsToMany(Post::class,'materialposts','mat_arch','mat_post');
+    }
+
 }

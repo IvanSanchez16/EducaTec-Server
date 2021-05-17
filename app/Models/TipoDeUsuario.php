@@ -36,4 +36,8 @@ class TipoDeUsuario extends Model
      * @var array
      */
     protected $casts = [];
+
+    public function users(){
+        $this->hasMany(User::class,'us_tipo_usuario');
+    }
 }

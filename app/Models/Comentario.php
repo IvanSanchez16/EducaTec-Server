@@ -21,7 +21,9 @@ class Comentario extends Model
      * @var array
      */
     protected $fillable = [
-        'com_user'
+        'com_user',
+        'com_post',
+        'com_comentario'
     ];
 
     /**
@@ -37,4 +39,21 @@ class Comentario extends Model
      * @var array
      */
     protected $casts = [];
+
+    public function user(){
+        return $this->belongsTo(User::class,'com_user');
+    }
+
+    public function post(){
+        return $this->belongsTo(Post::class,'com_post');
+    }
+
+    public function desccomentarios(){
+        return $this->hasMany(Desccomentarios::class,'dcom_comentario');
+    }
+
+    public function calificaciones(){
+        return $this->hasMany(Calificaciones::class,'cal_id');
+    }
+
 }

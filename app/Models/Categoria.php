@@ -37,4 +37,8 @@ class Categoria extends Model
      * @var array
      */
     protected $casts = [];
+
+    public function materias(){
+        return $this->hasMany(Materia::class,'mat_categoria');
+    }
 }

@@ -37,4 +37,12 @@ class Materia extends Model
      * @var array
      */
     protected $casts = [];
+
+    public function categoria(){
+        return $this->belongsTo(Categoria::class,'mat_categoria');
+    }
+
+    public function archivos(){
+        return $this->hasMany(Archivo::class,'arch_materia');
+    }
 }

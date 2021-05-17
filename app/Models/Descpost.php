@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Repositorio extends Model
+class Descpost extends Model
 {
     use HasFactory;
-    protected $table = 'repositorios';
-    protected $primaryKey = ['repo_user','repo_arch'];
+
+    protected $table = 'descposts';
+    protected $primaryKey = ['dpost_post','dpost_inc'];
 
     public $incrementing = false;
     public $timestamps = false;
@@ -20,8 +21,9 @@ class Repositorio extends Model
      * @var array
      */
     protected $fillable = [
-        'repo_users',
-        'repo_arch'
+        'dpost_post',
+        'dpost_inc',
+        'descripcion'
     ];
 
     /**
@@ -37,4 +39,8 @@ class Repositorio extends Model
      * @var array
      */
     protected $casts = [];
+
+    public function post(){
+        return $this->belongsTo(Post::class,'dpost_post');
+    }
 }

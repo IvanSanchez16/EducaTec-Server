@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     protected $table = 'users';
     protected $primaryKey = 'matricula';
@@ -22,7 +24,13 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
+        'matricula',
+        'nombre',
+        'apellido_paterno',
+        'apellido_materno',
+        'fecha_ingreso',
+        'us_tipo_usuario',
+        'us_carrera',
         'email',
         'password',
     ];
@@ -45,4 +53,28 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function archivos(){
+        return $this->hasMany(Archivo::class,'arch_user');
+    }
+
+    public function posts(){
+        return $this->hasMany(Post::class,'post_user');
+    }
+
+    public function comentarios(){
+        return $this->hasMany(Comentario::class,'com_user');
+    }
+
+    public function calificaciones(){
+        return $this->hasMany(Calificacion::class,'cal_user');
+    }
+
+    public function tipoUsuario(){
+        return $this->belongsTo(TipoDeUsuario::class,'us_tipo_usuario');
+    }
+
+    public function carrera(){
+        return $this->belongsTo(Carrera::class,'us_carrera');
+    }
 }
