@@ -21,7 +21,9 @@ class Comentario extends Model
      * @var array
      */
     protected $fillable = [
-        'com_user'
+        'com_user',
+        'com_post',
+        'com_comentario'
     ];
 
     /**
