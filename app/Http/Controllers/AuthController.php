@@ -10,15 +10,16 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     public function register(UserRequest $request){
+        $apellidos = explode(' ',$request['apellidos']);
         $user = User::create([
-            'matricula' => $request['matricula'],
+            'matricula' => substr($request['email'],0,8),
             'nombre' => $request['nombre'],
-            'apellido_paterno' => $request['apellido_paterno'],
-            'apellido_materno' => $request['apellido_materno'],
-            'fecha_ingreso' => $request['fecha_de_ingreso'],
-            'email' => $request['matricula'].'@itculiacan.edu.mx',
+            'apellido_paterno' => $apellidos[0],
+            'apellido_materno' => $apellidos[1],
+            'semestre' => $request['semestre'],
+            'email' => $request['email'],
             'password' => bcrypt($request['password']),
-            'us_tipo_usuario' => $request['tipo_de_usuario'],
+            'us_tipo_usuario' => 3,
             'us_carrera' => $request['carrera']
         ]);
 
@@ -30,8 +31,7 @@ class AuthController extends Controller
     }
 
     public function login(LoginRequest $request){
-        $email = $request['matricula'].'@itculiacan.edu.mx';
-        $user = User::where('email', $email)->first();
+        $user = User::find($request['matricula']);
 
         //Check password
         if (!Hash::check($request['password'],$user->password) ){

@@ -28,7 +28,7 @@ class User extends Authenticatable
         'nombre',
         'apellido_paterno',
         'apellido_materno',
-        'fecha_ingreso',
+        'semestre',
         'us_tipo_usuario',
         'us_carrera',
         'email',
