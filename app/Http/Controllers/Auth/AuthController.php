@@ -7,6 +7,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -25,7 +26,8 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('educatecToken')->plainTextToken;
-        
+
+        Storage::makeDirectory($user->matricula);
         $user->sendEmailVerificationNotification();
 
         return response()->json([

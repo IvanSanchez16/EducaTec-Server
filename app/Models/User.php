@@ -81,15 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(Carrera::class,'us_carrera');
     }
 
-    public function sendEmailVerificationNotification() {
-        $user = $this->nombre;
-
-        $this->notify(new UserEmailVerification($user));
-    }
-
     public function sendPasswordResetNotification($token){
-        $user = $this->nombre;
-        $email = $this->email;
-        $this->notify(new UserResetPassword($token,$user,$email));
+        $this->notify(new UserResetPassword($token));
     }
 }

@@ -12,18 +12,14 @@ class UserResetPassword extends Notification
     use Queueable;
 
     protected $token;
-    protected $email;
-    protected $user;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($token,$user,$email)
+    public function __construct($token)
     {
         $this->token = $token;
-        $this->user = $user;
-        $this->email = $email;
     }
 
     /**
@@ -51,8 +47,8 @@ class UserResetPassword extends Notification
                 'emails.cambiarPassword',
                 [
                     'token' => $this->token,
-                    'user' => $this->user,
-                    'email' => $this->email
+                    'user' => $notifiable->nombre,
+                    'email' => $notifiable->email
                 ]
             );
     }
