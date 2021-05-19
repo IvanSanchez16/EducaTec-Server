@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,13 +17,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
 Route::post('/registro',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
 
+Route::get('/email/verify/{id}/{hash}',[VerificationController::class,'verify'])->name('verification.verify');
+Route::get('/email/resend',[VerificationController::class,'resend'])->name('verification.resend');
+Route::post('/password/email'.[ForgotPasswordController::class,'sendResetEmail'])->name('password.email');
+Route::post('/password/reset',[ForgotPasswordController::class,'reset'])->name('password.update');
 
 Route::middleware(['auth:sanctum'])->group(function (){
     Route::apiResource('archivo',\App\Http\Controllers\ArchivoController::class);

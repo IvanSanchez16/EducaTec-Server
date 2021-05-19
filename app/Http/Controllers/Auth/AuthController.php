@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
@@ -24,6 +25,8 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('educatecToken')->plainTextToken;
+        
+        $user->sendEmailVerificationNotification();
 
         return response()->json([
             'token' => $token
