@@ -35,7 +35,6 @@ class Archivo extends Model
      * @var array
      */
     protected $hidden = [
-        'path'
     ];
 
     /**
