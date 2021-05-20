@@ -67,6 +67,11 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    public function cambiarFoto($foto){
+        $path = '/public/Fotos';
+        $foto->storeAs($path,$this->nocontrol.'.'.$foto->extension());
+    }
+
     public function archivos(){
         return $this->hasMany(Archivo::class,'arch_user');
     }

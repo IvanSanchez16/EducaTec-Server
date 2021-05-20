@@ -24,7 +24,7 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'matricula' => 'required|exists:users',
+            'nocontrol' => 'required|exists:users',
             'password' => 'required'
         ];
     }
@@ -32,8 +32,8 @@ class LoginRequest extends FormRequest
     public function messages()
     {
         return [
-            'matricula.required' => 'Ingrese una matricula',
-            'matricula.exists' => 'La matricula ingresada no ha sido registrada',
+            'nocontrol.required' => 'Ingrese un número de control',
+            'nocontrol.exists' => 'La matricula ingresada no ha sido registrada',
             'password' => 'Ingrese la contraseña'
         ];
     }

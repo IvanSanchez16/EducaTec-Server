@@ -21,8 +21,8 @@ class UserRequest extends FormRequest
      * @return array
      */
     public function rules(){
-        $method = $this->method();
-        if ($method == 'POST')
+        $url = $this->route()->uri;
+        if ($url == 'api/registro')
             return [
                 'nombre' => 'required|max:255',
                 'apellidos' => 'required|max:255',
@@ -38,7 +38,8 @@ class UserRequest extends FormRequest
             'email' => 'email|unique:users',
             'semestre' => 'numeric',
             'password' => 'min:8|confirmed',
-            'carrera' => 'exists:carreras,car_id'
+            'carrera' => 'exists:carreras,car_id',
+            'foto' => 'file'
         ];
     }
 

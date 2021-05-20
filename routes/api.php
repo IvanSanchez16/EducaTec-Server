@@ -38,6 +38,9 @@ Route::middleware(['auth:sanctum'])->group(function (){
     //Login
     Route::get('/user',[UserController::class,'show']);
 
+    //Perfil
+    Route::post('/user',[UserController::class,'update']);
+
     //REST
     Route::apiResource('materias',MateriaController::class);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,9 +26,18 @@ class UserController extends Controller
         return response()->json($userData);
     }
 
-    public function update(Request $request, User $user)
-    {
-        //
+    public function update(UserRequest $request) {
+        $user = Auth::user();
+        if ($request->exists('foto'))
+            $user->cambiarFoto( $request->file('foto') );
+
+        $request = $request->all();
+        $user->update($request);
+        $user->save();
+
+        return response()->json([
+            "Mensaje" => 'Usuario actualizado correctamente'
+        ]);
     }
 
     public function destroy(User $user)
