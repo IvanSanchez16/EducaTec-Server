@@ -33,8 +33,7 @@ class AuthServiceProvider extends ServiceProvider
                 ->view(
                     'emails.validarCorreo',
                     [
-                        'url' => $url,
-                        'user' => $notifiable->nombre
+                        'url' => $url
                     ]
                 );
         });
