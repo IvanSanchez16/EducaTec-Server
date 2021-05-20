@@ -23,7 +23,7 @@ class ArchivoController extends Controller
             DB::raw('(DATE_FORMAT(archivos.updated_at,"%d/%m/%Y")) as fecha_modificacion'),
         ])
             ->join('materias','arch_materia','=','mat_id')
-            ->where('arch_user',$user->matricula)->get();
+            ->where('arch_user',$user->nocontrol)->get();
 
         $mochila = [];
         $aux = [];
@@ -54,10 +54,10 @@ class ArchivoController extends Controller
             'arch_semestre' => $request->get('semestre'),
             'arch_privado' => $request->get('privado'),
             'path' => $request->get('path'),
-            'arch_user' => $user->matricula
+            'arch_user' => $user->nocontrol
         ];
 
-        $path = '/'.$user->matricula.$request->get('path');
+        $path = '/'.$user->nocontrol.$request->get('path');
         $archivo->storeAs($path,$archivo->getClientOriginalName());
 
         Archivo::create($fieldsArch);

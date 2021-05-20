@@ -17,7 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasFactory, Notifiable, HasApiTokens;
 
     protected $table = 'users';
-    protected $primaryKey = 'matricula';
+    protected $primaryKey = 'nocontrol';
 
     public $incrementing = false;
     public $timestamps = true;
@@ -28,7 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'matricula',
+        'nocontrol',
         'nombre',
         'apellido_paterno',
         'apellido_materno',
@@ -61,7 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function show(){
         $fotoURL = $this->getURLFoto();
         return [
-            'NoControl' => $this->matricula,
+            'NoControl' => $this->nocontrol,
             'Nombre' => $this->nombre.' '.$this->apellido_paterno,
             'Foto' => $fotoURL
         ];
@@ -96,7 +96,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     private function getURLFoto(){
-        $noControl = $this->matricula;
+        $noControl = $this->nocontrol;
         $extensiones = ['emf','wmf','jpg','jpeg','jfif','jpe','png','bmp','dib','rle','gif','emz','wmz','tif','tiff','svg','ico','webp'];
 
         foreach ($extensiones as $extension)

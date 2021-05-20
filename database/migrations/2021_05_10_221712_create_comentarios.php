@@ -18,7 +18,7 @@ class CreateComentarios extends Migration
             $table->integer('com_user');
             $table->timestamps();
 
-            $table->foreign('com_user')->references('matricula')->on('users');
+            $table->foreign('com_user')->references('nocontrol')->on('users');
         });
     }
 

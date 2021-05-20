@@ -4,7 +4,43 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <link rel="stylesheet" href="correo.css">
+    <style>
+        body{
+            /*la letra que usa el mau*/
+        }
+        .container{
+            background-color: #fff;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        h2{
+            font-size: 30px;
+            color: #8a40a9;
+        }
+        p{
+            color: #666;
+        }
+
+        .buttons{
+            margin-top: 40px;
+        }
+
+        .btn_confirmacion{
+            text-decoration: none;
+            font-weight: bold;
+            color: #fff;
+            background-color: #8a40a9;
+            border-radius: 5px;
+            padding: 15px 25px;
+            transition: 0.4s;
+        }
+
+        .btn_confirmacion:hover{
+            background-color: #632d7b;
+            transform: scale(1.1);
+        }
+    </style>
     <title>Confirmar correo</title>
 </head>
 
