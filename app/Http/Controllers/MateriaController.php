@@ -10,11 +10,15 @@ class MateriaController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        //
+        $materias = Materia::select([
+            'mat_id as id',
+            'mat_nombre as nombre'
+        ])->get();
+        return response()->json($materias,200);
     }
 
     /**

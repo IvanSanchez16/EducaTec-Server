@@ -18,7 +18,7 @@ class CreatePostsTable extends Migration
             $table->integer('post_user');
             $table->timestamps();
 
-            $table->foreign('post_user')->references('matricula')->on('users');
+            $table->foreign('post_user')->references('nocontrol')->on('users');
         });
     }
 

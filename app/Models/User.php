@@ -2,18 +2,22 @@
 
 namespace App\Models;
 
+use App\Notifications\UserEmailVerification;
+use App\Notifications\UserResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, HasApiTokens;
 
     protected $table = 'users';
-    protected $primaryKey = 'matricula';
+    protected $primaryKey = 'nocontrol';
 
     public $incrementing = false;
     public $timestamps = true;
@@ -24,11 +28,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'matricula',
+        'nocontrol',
         'nombre',
         'apellido_paterno',
         'apellido_materno',
-        'fecha_ingreso',
+        'semestre',
         'us_tipo_usuario',
         'us_carrera',
         'email',
@@ -54,6 +58,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function show(){
+        $fotoURL = $this->getURLFoto();
+        return [
+            'NoControl' => $this->nocontrol,
+            'Nombre' => $this->nombre.' '.$this->apellido_paterno,
+            'Foto' => $fotoURL
+        ];
+    }
+
     public function archivos(){
         return $this->hasMany(Archivo::class,'arch_user');
     }
@@ -76,5 +89,20 @@ class User extends Authenticatable
 
     public function carrera(){
         return $this->belongsTo(Carrera::class,'us_carrera');
+    }
+
+    public function sendPasswordResetNotification($token){
+        $this->notify(new UserResetPassword($token));
+    }
+
+    private function getURLFoto(){
+        $noControl = $this->nocontrol;
+        $extensiones = ['emf','wmf','jpg','jpeg','jfif','jpe','png','bmp','dib','rle','gif','emz','wmz','tif','tiff','svg','ico','webp'];
+
+        foreach ($extensiones as $extension)
+            if (Storage::disk('public')->exists('Fotos/'.$noControl.'.'.$extension))
+                return public_path('storage/Fotos/'.$noControl.'.'.$extension);
+
+        return public_path('storage/Fotos/Default.png');
     }
 }

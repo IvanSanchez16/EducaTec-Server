@@ -20,7 +20,7 @@ class CreateCalificaciones extends Migration
             $table->boolean('cal_calificacion');
 
             $table->primary(['cal_id','cal_post']);
-            $table->foreign('cal_user')->references('matricula')->on('users');
+            $table->foreign('cal_user')->references('nocontrol')->on('users');
         });
     }
 

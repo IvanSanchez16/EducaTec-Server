@@ -24,7 +24,7 @@ class CreateArchivosTable extends Migration
             $table->timestamps();
 
             $table->foreign('arch_materia')->references('mat_id')->on('materias');
-            $table->foreign('arch_user')->references('matricula')->on('users');
+            $table->foreign('arch_user')->references('nocontrol')->on('users');
         });
     }
 
