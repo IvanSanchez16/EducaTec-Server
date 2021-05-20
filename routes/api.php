@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArchivoController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
@@ -24,19 +25,27 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
+//Login
 Route::post('/registro',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
 
+//Auth
 Route::get('/email/verify/{id}/{hash}',[VerificationController::class,'verify'])->name('verification.verify');
 Route::post('/password/email',[ForgotPasswordController::class,'sendResetEmail'])->name('password.email');
 Route::post('/password/reset',[ForgotPasswordController::class,'reset'])->name('password.update');
 
 Route::middleware(['auth:sanctum'])->group(function (){
+    //Login
+    Route::get('/user',[UserController::class,'show']);
+
+    //REST
     Route::apiResource('materias',MateriaController::class);
 
-    Route::get('/mochila',[MochilaController::class,'index']);
-    Route::post('/mochila/archivo',[MochilaController::class,'store']);
+    //Mochila
+    Route::get('/mochila',[ArchivoController::class,'index']);
+    Route::post('/mochila/archivo',[ArchivoController::class,'store']);
 
+    //Auth
     Route::get('/email/resend',[VerificationController::class,'resend'])->name('verification.resend');
     Route::post('/logout',[AuthController::class,'logout']);
 });

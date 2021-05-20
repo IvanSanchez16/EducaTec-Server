@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 
@@ -57,6 +58,15 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    public function show(){
+        $fotoURL = $this->getURLFoto();
+        return [
+            'NoControl' => $this->matricula,
+            'Nombre' => $this->nombre.' '.$this->apellido_paterno,
+            'Foto' => $fotoURL
+        ];
+    }
+
     public function archivos(){
         return $this->hasMany(Archivo::class,'arch_user');
     }
@@ -83,5 +93,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function sendPasswordResetNotification($token){
         $this->notify(new UserResetPassword($token));
+    }
+
+    private function getURLFoto(){
+        $noControl = $this->matricula;
+        $extensiones = ['emf','wmf','jpg','jpeg','jfif','jpe','png','bmp','dib','rle','gif','emz','wmz','tif','tiff','svg','ico','webp'];
+
+        foreach ($extensiones as $extension)
+            if (Storage::disk('public')->exists('Fotos/'.$noControl.'.'.$extension))
+                return public_path('storage/Fotos/'.$noControl.'.'.$extension);
+
+        return public_path('storage/Fotos/Default.png');
     }
 }

@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ArchivoRequest;
 use App\Models\Archivo;
-use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
-class MochilaController extends Controller
+class ArchivoController extends Controller
 {
-    public function index(){
+
+    public function index() {
         $user = Auth::user();
         $archivos = Archivo::select([
             'arch_id as id',
@@ -43,7 +44,7 @@ class MochilaController extends Controller
         return response()->json($mochila,200);
     }
 
-    public function store(ArchivoRequest $request){
+    public function store(ArchivoRequest $request) {
         $user = $request->user();
         $archivo = $request->file('archivo');
 
@@ -64,5 +65,17 @@ class MochilaController extends Controller
         return response()->json([
             "Mensaje" => 'Archivo subido exitosamente'
         ],201);
+    }
+
+
+    public function show(Archivo $archivo) {
+        //
+    }
+    public function update(Request $request, Archivo $archivo) {
+        //
+    }
+
+    public function destroy(Archivo $archivo) {
+        //
     }
 }
