@@ -20,6 +20,7 @@ class PostController extends Controller
 {
 
     public function index() {
+        $user = Auth::user();
         $posts = Post::select([
             'post_id as id',
             DB::raw('(CONCAT(users.nombre," ",users.apellido_paterno)) as nombre'),
@@ -33,11 +34,7 @@ class PostController extends Controller
 
         foreach ($posts as $post){
             //Texto
-            $textosArray = Descpost::select('descripcion')->where('dpost_post',$post->id)->get();
-            $textoCompleto = "";
-            foreach ($textosArray as $texto)
-                $textoCompleto = $textoCompleto.$texto->descripcion;
-            $post['texto'] = $textoCompleto;
+            $post['texto'] = $post->getText();
 
             //Comentarios
             $numComentarios = Comentario::where('com_post',$post->id)->count();
@@ -46,10 +43,13 @@ class PostController extends Controller
             //Calificacion
             $votosBuenos = Calificacion::where('cal_id',$post->id)->where('cal_post',1)->where('cal_calificacion',1)->count();
             $votosMalas = Calificacion::where('cal_id',$post->id)->where('cal_post',1)->where('cal_calificacion',0)->count();
+            $votoPropio = Calificacion::where('cal_id',$post->id)->where('cal_post',1)->where('cal_user',$user->nocontrol)->first();
+            $votoPropio = !$votoPropio ? 1 : ($votoPropio->cal_calificacion == 1 ? 2 : 0);
 
             $post['calificaciones'] = [
                 'votosBuenos' => $votosBuenos,
-                'votosMalos' => $votosMalas
+                'votosMalos' => $votosMalas,
+                'votoPropio' => $votoPropio
             ];
 
             //Archivos
@@ -174,7 +174,43 @@ class PostController extends Controller
     }
 
     public function show(Post $post) {
-        //
+        $user = Auth::user();
+        $postDetails = Post::select([
+            'post_id as id',
+            DB::raw('(CONCAT(users.nombre," ",users.apellido_paterno)) as nombre'),
+            'post_subtitle as subtitulo',
+            'mat_nombre as materia',
+            DB::raw('(DATE_FORMAT(posts.created_at,"%d/%m/%Y")) as fecha')
+        ])
+            ->join('users','nocontrol','=','post_user')
+            ->join('materias','mat_id','=','post_materia')
+            ->where('post_id',$post->post_id)
+            ->first();
+
+        //Texto
+        $postDetails['texto'] = $post->getText();
+
+        //Comentarios
+        $Comentarios = $post->Comentarios();
+        $postDetails['Comentarios'] = $Comentarios;
+
+        //Calificacion
+        $votosBuenos = Calificacion::where('cal_id',$postDetails->id)->where('cal_post',1)->where('cal_calificacion',1)->count();
+        $votosMalas = Calificacion::where('cal_id',$postDetails->id)->where('cal_post',1)->where('cal_calificacion',0)->count();
+        $votoPropio = Calificacion::where('cal_id',$postDetails->id)->where('cal_post',1)->where('cal_user',$user->nocontrol)->first();
+        $votoPropio = !$votoPropio ? 1 : ($votoPropio->calificacion == 1 ? 2 : 0);
+
+        $postDetails['calificaciones'] = [
+            'votosBuenos' => $votosBuenos,
+            'votosMalos' => $votosMalas,
+            'votoPropio' => $votoPropio
+        ];
+
+        //Archivos
+        $archivos = Archivo::select('arch_id as id','arch_nombre as nombre')->join('materialposts','mat_arch','=','arch_id')->where('mat_post',$postDetails->id)->get();
+        $postDetails['archivos'] = $archivos;
+
+        return response()->json($postDetails);
     }
 
     public function update(Request $request, Post $post) {
