@@ -48,6 +48,7 @@ Route::middleware(['auth:sanctum'])->group(function (){
     //Posts
     Route::get('/posts',[PostController::class,'index']);
     Route::post('/posts',[PostController::class,'store']);
+    Route::post('/calificar/post/{post}',[PostController::class,'calificar'])->name('posts.calificar');
 
     //Mochila
     Route::get('/mochila',[ArchivoController::class,'index']);

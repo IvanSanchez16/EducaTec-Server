@@ -43,8 +43,8 @@ class PostController extends Controller
             $post['numComentarios'] = $numComentarios;
 
             //Calificacion
-            $votosBuenos = Calificacion::where('cal_post',$post->id)->where('cal_calificacion',1)->count();
-            $votosMalas = Calificacion::where('cal_post',$post->id)->where('cal_calificacion',0)->count();
+            $votosBuenos = Calificacion::where('cal_id',$post->id)->where('cal_post',1)->where('cal_calificacion',1)->count();
+            $votosMalas = Calificacion::where('cal_id',$post->id)->where('cal_post',1)->where('cal_calificacion',0)->count();
 
             $post['calificaciones'] = [
                 'votosBuenos' => $votosBuenos,
@@ -100,6 +100,37 @@ class PostController extends Controller
         ],201);
     }
 
+    public function calificar(Request $request,Post $post) {
+        $user = Auth::user();
+        if ($user->nocontrol == $post->post_user)
+            return response()->json([
+                "Error" => 'No puedes votar tus propios posts o comentarios'
+            ],401);
+
+        $calificacion = $request->get('voto');
+        $calificacion = $calificacion == "1";
+        $califico = Calificacion::where('cal_id',$post->post_id)->where('cal_post',1)->where('cal_user',$user->nocontrol)->where('cal_calificacion',(!$calificacion));
+        if ($califico->count() > 0)
+            $califico->delete();
+        
+
+        try {
+            Calificacion::create([
+                'cal_id' => $post->post_id,
+                'cal_post' => 1,
+                'cal_user' => $user->nocontrol,
+                'cal_calificacion' => $calificacion
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'Mensaje' => 'Calificado correctamente'
+            ]);
+        }
+
+        return response()->json([
+           'Mensaje' => 'Calificado correctamente'
+        ]);
+    }
 
     public function show(Post $post) {
         //
