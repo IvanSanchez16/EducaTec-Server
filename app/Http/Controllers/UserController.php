@@ -31,8 +31,14 @@ class UserController extends Controller
         if ($request->exists('foto'))
             $user->cambiarFoto( $request->file('foto') );
 
-        $request = $request->all();
-        $user->update($request);
+        $nuevoRequest = [];
+        if ($request->exists('semestre'))
+            $nuevoRequest['semestre'] = $request->get('semestre');
+
+        if ($request->exists('carrera'))
+            $nuevoRequest['us_carrera'] = $request->get('carrera');
+
+        $user->update($nuevoRequest);
         $user->save();
 
         return response()->json([

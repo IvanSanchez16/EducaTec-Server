@@ -57,6 +57,7 @@ Route::middleware(['auth:sanctum'])->group(function (){
     Route::post('/mochila/archivo',[ArchivoController::class,'store']);
     Route::delete('/mochila/archivo/{archivo}',[ArchivoController::class,'destroy'])->name('archivos.destroy');
     Route::get('/mochila/descargar/{archivo}',[ArchivoController::class,'descargar'])->name('archivos.descargar');
+    Route::put('/mochila/modificar/{archivo}',[ArchivoController::class,'update'])->name('archivos.update');
 
     //Foro
     Route::get('/foro',[PostController::class,'indexForo']);

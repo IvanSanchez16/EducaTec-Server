@@ -41,6 +41,7 @@ class ArchivoController extends Controller
                 continue;
             }
             //Directorios
+
         }
         return response()->json($mochila,200);
     }
@@ -72,8 +73,42 @@ class ArchivoController extends Controller
     public function show(Archivo $archivo) {
         //
     }
-    public function update(Request $request, Archivo $archivo) {
-        //
+    public function update(ArchivoRequest $request, Archivo $archivo) {
+        $user = Auth::user();
+        if ($archivo->arch_user != $user->nocontrol)
+            return response()->json([
+                "Error" => 'El archivo no es de tu propiedad'
+            ],401);
+        $nuevoRequest = [];
+
+        if ( $request->exists('nombre') ){
+            $nuevoRequest['arch_nombre'] = $request->get('nombre');
+
+            $oldPath = '/'.$user->nocontrol.$archivo->path.$archivo->arch_nombre;
+            if ( $request->exists('path') ){
+                $newPath = '/'.$user->nocontrol.$request->get('path').$request->get('nombre');
+                $nuevoRequest['path'] = $request->get('path');
+            }else
+                $newPath = '/'.$user->nocontrol.$archivo->path.$request->get('nombre');
+
+            Storage::move($oldPath,$newPath);
+        }
+
+        if ( $request->exists('materia') )
+            $nuevoRequest['arch_materia'] = $request->get('materia');
+
+        if ( $request->exists('semestre') )
+            $nuevoRequest['arch_semestre'] = $request->get('semestre');
+
+        if ( $request->exists('privado') )
+            $nuevoRequest['arch_privado'] = $request->get('privado');
+
+        $archivo->update($nuevoRequest);
+        $archivo->save();
+
+        return response()->json([
+            'Mensaje' => 'Archivo actualizado correctamente'
+        ]);
     }
 
     public function destroy(Archivo $archivo) {
