@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ArchivoController extends Controller
 {
@@ -76,6 +77,22 @@ class ArchivoController extends Controller
     }
 
     public function destroy(Archivo $archivo) {
-        //
+        $user = Auth::user();
+        if ($archivo->arch_user != $user->nocontrol)
+            return response()->json([
+                "Error" => 'El archivo no es de tu propiedad'
+            ],401);
+
+        try {
+            $archivo->delete();
+        } catch (\Exception $e) {
+            return response()->json([
+                "Error" => 'El archivo se encuentra activo dentro de un post, no es posible eliminarlo'
+            ],409);
+        }
+        $path = '/' . $user->nocontrol . $archivo->path . $archivo->arch_nombre;
+        Storage::delete($path);
+
+        return response()->json([],204);
     }
 }
