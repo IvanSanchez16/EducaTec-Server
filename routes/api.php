@@ -58,6 +58,10 @@ Route::middleware(['auth:sanctum'])->group(function (){
     Route::delete('/mochila/archivo/{archivo}',[ArchivoController::class,'destroy'])->name('archivos.destroy');
     Route::get('/mochila/descargar/{archivo}',[ArchivoController::class,'descargar'])->name('archivos.descargar');
 
+    //Foro
+    Route::get('/foro',[PostController::class,'indexForo']);
+    Route::post('/foro',[PostController::class,'storeForo']);
+
     //Auth
     Route::get('/email/resend',[VerificationController::class,'resend'])->name('verification.resend');
     Route::post('/logout',[AuthController::class,'logout']);

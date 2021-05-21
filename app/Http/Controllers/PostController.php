@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CalificarRequest;
 use App\Http\Requests\ComentarioRequest;
+use App\Http\Requests\ForoRequest;
 use App\Http\Requests\PostRequest;
 use App\Models\Archivo;
 use App\Models\Calificacion;
@@ -20,17 +21,44 @@ class PostController extends Controller
 {
 
     public function index() {
+        $posts = $this->getPosts(true);
+
+        return response()->json($posts);
+    }
+
+    public function indexForo(){
+        $posts = $this->getPosts(false);
+
+        return response()->json($posts);
+    }
+
+    private function getPosts($band){
         $user = Auth::user();
-        $posts = Post::select([
-            'post_id as id',
-            DB::raw('(CONCAT(users.nombre," ",users.apellido_paterno)) as nombre'),
-            'post_subtitle as subtitulo',
-            'mat_nombre as materia',
-            DB::raw('(DATE_FORMAT(posts.created_at,"%d/%m/%Y")) as fecha')
-        ])
-            ->join('users','nocontrol','=','post_user')
-            ->join('materias','mat_id','=','post_materia')
-            ->get();
+        if ($band)
+            $posts = Post::select([
+                'post_id as id',
+                DB::raw('(CONCAT(users.nombre," ",users.apellido_paterno)) as nombre'),
+                'post_subtitle as subtitulo',
+                'mat_nombre as materia',
+                DB::raw('(DATE_FORMAT(posts.created_at,"%d/%m/%Y")) as fecha')
+            ])
+                ->join('users','nocontrol','=','post_user')
+                ->join('materias','mat_id','=','post_materia')
+                ->join('materialposts','mat_post','=','post_id')
+                ->get();
+        else
+            $posts = Post::select([
+                'post_id as id',
+                DB::raw('(CONCAT(users.nombre," ",users.apellido_paterno)) as nombre'),
+                'post_subtitle as subtitulo',
+                'mat_nombre as materia',
+                DB::raw('(DATE_FORMAT(posts.created_at,"%d/%m/%Y")) as fecha')
+            ])
+                ->join('users','nocontrol','=','post_user')
+                ->join('materias','mat_id','=','post_materia')
+                ->leftJoin('materialposts','mat_post','=','post_id')
+                ->whereNull('mat_post')
+                ->get();
 
         foreach ($posts as $post){
             //Texto
@@ -53,18 +81,43 @@ class PostController extends Controller
             ];
 
             //Archivos
-            $archivos = Archivo::select('arch_id as id','arch_nombre as nombre')->join('materialposts','mat_arch','=','arch_id')->where('mat_post',$post->id)->get();
-            $post['archivos'] = $archivos;
+            if ($band){
+                $archivos = Archivo::select('arch_id as id','arch_nombre as nombre')->join('materialposts','mat_arch','=','arch_id')->where('mat_post',$post->id)->get();
+                $post['archivos'] = $archivos;
+            }
         }
-
-        return response()->json($posts);
+        return $posts;
     }
 
     public function store(PostRequest $request) {
+        $response = $this->savePost($request);
+        if ($response)
+            return response()->json([
+                'Mensaje' => 'Post creado correctamente'
+            ],201);
+        else
+            return response()->json([
+                'Mensaje' => 'Error al crear el post'
+            ],500);
+    }
+
+    public function storeForo(ForoRequest $request){
+        $response = $this->savePost($request);
+        if ($response)
+            return response()->json([
+                'Mensaje' => 'Post creado correctamente'
+            ],201);
+        else
+            return response()->json([
+                'Mensaje' => 'Error al crear el post'
+            ],500);
+    }
+
+    private function savePost($request){
         $user = Auth::user();
         $post = Post::create([
-           'post_user' => $user->nocontrol,
-           'post_subtitle' => $request->get('subtitulo'),
+            'post_user' => $user->nocontrol,
+            'post_subtitle' => $request->get('subtitulo'),
             'post_materia' => $request->get('materia')
         ]);
 
@@ -89,16 +142,16 @@ class PostController extends Controller
             }while( strlen($texto)>0 );
         }
 
-        $archivos = $request->get('archivos');
-        foreach ($archivos as $archivo)
-            MaterialPost::create([
-                'mat_post' => $post->post_id,
-                'mat_arch' => $archivo
-            ]);
+        if ($request->exists('archivos')){
+            $archivos = $request->get('archivos');
+            foreach ($archivos as $archivo)
+                MaterialPost::create([
+                    'mat_post' => $post->post_id,
+                    'mat_arch' => $archivo
+                ]);
+        }
 
-        return response()->json([
-            'Mensaje' => 'Post creado correctamente'
-        ],201);
+        return true;
     }
 
     public function calificar(CalificarRequest $request,Post $post) {
@@ -208,7 +261,8 @@ class PostController extends Controller
 
         //Archivos
         $archivos = Archivo::select('arch_id as id','arch_nombre as nombre')->join('materialposts','mat_arch','=','arch_id')->where('mat_post',$postDetails->id)->get();
-        $postDetails['archivos'] = $archivos;
+        if (count($archivos) > 0)
+            $postDetails['archivos'] = $archivos;
 
         return response()->json($postDetails);
     }
