@@ -106,8 +106,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
         foreach ($extensiones as $extension)
             if (Storage::disk('public')->exists('Fotos/'.$noControl.'.'.$extension))
-                return public_path('storage/Fotos/'.$noControl.'.'.$extension);
+                return env('APP_URL').'storage/Fotos/'.$noControl.'.'.$extension;
 
-        return public_path('storage/Fotos/Default.png');
+        return env('APP_URL').'storage/Fotos/Default.png';
     }
 }
