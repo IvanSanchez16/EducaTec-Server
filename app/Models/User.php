@@ -100,7 +100,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new UserResetPassword($token));
     }
 
-    private function getURLFoto(){
+    public function getURLFoto(){
         $noControl = $this->nocontrol;
         $extensiones = ['emf','wmf','jpg','jpeg','jfif','jpe','png','bmp','dib','rle','gif','emz','wmz','tif','tiff','svg','ico','webp'];
 

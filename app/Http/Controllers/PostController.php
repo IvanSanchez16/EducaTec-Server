@@ -13,6 +13,7 @@ use App\Models\Desccomentarios;
 use App\Models\Descpost;
 use App\Models\MaterialPost;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -38,6 +39,7 @@ class PostController extends Controller
             $posts = Post::select([
                 'post_id as id',
                 DB::raw('(CONCAT(users.nombre," ",users.apellido_paterno)) as nombre'),
+                'post_user as user',
                 'post_subtitle as subtitulo',
                 'mat_nombre as materia',
                 DB::raw('(DATE_FORMAT(posts.created_at,"%d/%m/%Y")) as fecha')
@@ -79,6 +81,11 @@ class PostController extends Controller
                 'votosMalos' => $votosMalas,
                 'votoPropio' => $votoPropio
             ];
+
+            //Autor foto
+            $autor = User::find($post['user']);
+            $post['fotoAutor'] = $autor->getURLFoto();
+            unset($post['user']);
 
             //Archivos
             if ($band){
@@ -233,6 +240,7 @@ class PostController extends Controller
             DB::raw('(CONCAT(users.nombre," ",users.apellido_paterno)) as nombre'),
             'post_subtitle as subtitulo',
             'mat_nombre as materia',
+            'post_user as user',
             DB::raw('(DATE_FORMAT(posts.created_at,"%d/%m/%Y")) as fecha')
         ])
             ->join('users','nocontrol','=','post_user')
@@ -252,6 +260,11 @@ class PostController extends Controller
         $votosMalas = Calificacion::where('cal_id',$postDetails->id)->where('cal_post',1)->where('cal_calificacion',0)->count();
         $votoPropio = Calificacion::where('cal_id',$postDetails->id)->where('cal_post',1)->where('cal_user',$user->nocontrol)->first();
         $votoPropio = !$votoPropio ? 1 : ($votoPropio->calificacion == 1 ? 2 : 0);
+
+        //Autor foto
+        $autor = User::find($postDetails['user']);
+        $postDetails['fotoAutor'] = $autor->getURLFoto();
+        unset($postDetails['user']);
 
         $postDetails['calificaciones'] = [
             'votosBuenos' => $votosBuenos,
