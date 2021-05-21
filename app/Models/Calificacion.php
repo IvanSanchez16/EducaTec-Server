@@ -10,10 +10,10 @@ class Calificacion extends Model
     use HasFactory;
 
     protected $table = 'calificaciones';
-    protected $primaryKey = ['cal_id','cal_post'];
+    protected $primaryKey = ['cal_id','cal_post','cal_user','cal_calificacion'];
 
-    public $incrementing = true;
-    public $timestamps = true;
+    public $incrementing = false;
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +21,7 @@ class Calificacion extends Model
      * @var array
      */
     protected $fillable = [
+        'cal_id',
         'cal_post',
         'cal_user',
         'cal_calificacion'

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\MochilaController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -38,12 +39,24 @@ Route::middleware(['auth:sanctum'])->group(function (){
     //Login
     Route::get('/user',[UserController::class,'show']);
 
+    //Perfil
+    Route::post('/user',[UserController::class,'update']);
+
     //REST
     Route::apiResource('materias',MateriaController::class);
+
+    //Posts
+    Route::get('/posts',[PostController::class,'index']);
+    Route::post('/posts',[PostController::class,'store']);
+    Route::get('/posts/{post}',[PostController::class,'show'])->name('posts.show');
+    Route::post('/calificar/post/{post}',[PostController::class,'calificar'])->name('posts.calificar');
+    Route::post('/comentar/post/{post}',[PostController::class,'comentar'])->name('posts.comentar');
 
     //Mochila
     Route::get('/mochila',[ArchivoController::class,'index']);
     Route::post('/mochila/archivo',[ArchivoController::class,'store']);
+    Route::delete('/mochila/archivo/{archivo}',[ArchivoController::class,'destroy'])->name('archivos.destroy');
+    Route::get('/mochila/descargar/{archivo}',[ArchivoController::class,'descargar'])->name('archivos.descargar');
 
     //Auth
     Route::get('/email/resend',[VerificationController::class,'resend'])->name('verification.resend');
