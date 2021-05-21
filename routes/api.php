@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\MochilaController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,10 @@ Route::middleware(['auth:sanctum'])->group(function (){
 
     //REST
     Route::apiResource('materias',MateriaController::class);
+
+    //Posts
+    Route::get('/posts',[PostController::class,'index']);
+    Route::post('/posts',[PostController::class,'store']);
 
     //Mochila
     Route::get('/mochila',[ArchivoController::class,'index']);
