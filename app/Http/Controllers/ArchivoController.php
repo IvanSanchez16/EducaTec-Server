@@ -95,4 +95,9 @@ class ArchivoController extends Controller
 
         return response()->json([],204);
     }
+
+    public function descargar(Archivo $archivo){
+        $path = '/'.$archivo->arch_user.$archivo->path.$archivo->arch_nombre;
+        return Storage::download($path);
+    }
 }

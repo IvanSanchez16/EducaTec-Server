@@ -55,6 +55,7 @@ Route::middleware(['auth:sanctum'])->group(function (){
     Route::get('/mochila',[ArchivoController::class,'index']);
     Route::post('/mochila/archivo',[ArchivoController::class,'store']);
     Route::delete('/mochila/archivo/{archivo}',[ArchivoController::class,'destroy'])->name('archivos.destroy');
+    Route::get('/mochila/descargar/{archivo}',[ArchivoController::class,'descargar'])->name('archivos.descargar');
 
     //Auth
     Route::get('/email/resend',[VerificationController::class,'resend'])->name('verification.resend');
