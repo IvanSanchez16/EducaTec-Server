@@ -24,24 +24,20 @@ class ArchivoController extends Controller
             DB::raw('(DATE_FORMAT(archivos.updated_at,"%d/%m/%Y")) as fecha_modificacion'),
         ])
             ->join('materias','arch_materia','=','mat_id')
-            ->where('arch_user',$user->nocontrol)->get();
+            ->where('arch_user',$user->nocontrol)
+            ->orderBy('path','desc')
+            ->get();
 
         $mochila = [];
-        $aux = [];
         foreach ($archivos as $archivo){
-            //Directorio raiz
-            if ( $archivo['path'] == '/' ){
-                $mochila[] = [
-                    'id' => $archivo['id'],
-                    'nombre' => $archivo['nombre'],
-                    'materia' => $archivo['materia'],
-                    'semestre' => $archivo['semestre'],
-                    'fecha_modificacion' => $archivo['fecha_modificacion']
-                ];
-                continue;
-            }
-            //Directorios
-
+            $mochila[] = [
+                'id' => $archivo['id'],
+                'nombre' => $archivo['nombre'],
+                'materia' => $archivo['materia'],
+                'semestre' => $archivo['semestre'],
+                'fecha_modificacion' => $archivo['fecha_modificacion'],
+                'path' => $archivo['path']
+            ];
         }
         return response()->json($mochila,200);
     }
