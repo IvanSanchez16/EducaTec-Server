@@ -259,7 +259,7 @@ class PostController extends Controller
         $votosBuenos = Calificacion::where('cal_id',$postDetails->id)->where('cal_post',1)->where('cal_calificacion',1)->count();
         $votosMalas = Calificacion::where('cal_id',$postDetails->id)->where('cal_post',1)->where('cal_calificacion',0)->count();
         $votoPropio = Calificacion::where('cal_id',$postDetails->id)->where('cal_post',1)->where('cal_user',$user->nocontrol)->first();
-        $votoPropio = !$votoPropio ? 1 : ($votoPropio->calificacion == 1 ? 2 : 0);
+        $votoPropio = !$votoPropio ? 1 : ($votoPropio->cal_calificacion == 1 ? 2 : 0);
 
         //Autor foto
         $autor = User::find($postDetails['user']);

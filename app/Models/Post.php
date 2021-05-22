@@ -70,11 +70,11 @@ class Post extends Model
         $comentarios = Comentario::select([
             'com_id as id',
             'com_user as autor',
+            'com_post as post',
             DB::raw('(DATE_FORMAT(comentarios.created_at,"%d/%m/%Y")) as fecha')
         ])->where('com_post',$this->post_id)
             ->whereNull('com_comentario')
             ->get();
-
         return $this->getInfoComentarios($comentarios);
     }
 
@@ -83,8 +83,8 @@ class Post extends Model
             'com_id as id',
             'com_user as autor',
             DB::raw('(DATE_FORMAT(comentarios.created_at,"%d/%m/%Y")) as fecha')
-        ])->where('com_post',$comentario->com_post)
-            ->where('com_comentario',$comentario->com_id)
+        ])->where('com_post',$comentario->post)
+            ->where('com_comentario',$comentario->id)
             ->get();
         if (count($respuestas) == 0)
             return [];
@@ -102,11 +102,18 @@ class Post extends Model
                 $textoCompleto = $textoCompleto.$texto->descripcion;
             $comentario['texto'] = $textoCompleto;
 
+            //Autor
+            $autor = User::find($comentario['autor']);
+            $comentario['autor'] = [
+                'nombre' => $autor->nombre.' '.$autor->apellido_paterno,
+                'foto' => $autor->getURLFoto()
+            ];
+
             //Votos
             $votosBuenos = Calificacion::where('cal_id',$comentario->id)->where('cal_post',0)->where('cal_calificacion',1)->count();
             $votosMalas = Calificacion::where('cal_id',$comentario->id)->where('cal_post',0)->where('cal_calificacion',0)->count();
             $votoPropio = Calificacion::where('cal_id',$comentario->id)->where('cal_post',0)->where('cal_user',$user->nocontrol)->first();
-            $votoPropio = !$votoPropio ? 1 : ($votoPropio->calificacion == 1 ? 2 : 0);
+            $votoPropio = !$votoPropio ? 1 : ($votoPropio->cal_calificacion == 1 ? 2 : 0);
 
             $comentario['calificaciones'] = [
                 'votosBuenos' => $votosBuenos,
@@ -115,6 +122,7 @@ class Post extends Model
             ];
             //Busqueda de respuestas de manera recursiva
             $respuestas = $this->getComentarios($comentario);
+            unset($comentario['post']);
             if (count($respuestas) == 0)
                 continue;
             $comentario['Respuestas'] = $respuestas;

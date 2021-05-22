@@ -4,6 +4,7 @@ use App\Http\Controllers\ArchivoController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\MochilaController;
 use App\Http\Controllers\PostController;
@@ -62,6 +63,7 @@ Route::middleware(['auth:sanctum'])->group(function (){
     //Foro
     Route::get('/foro',[PostController::class,'indexForo']);
     Route::post('/foro',[PostController::class,'storeForo']);
+    Route::post('/calificar/comentario/{comentario}',[ComentarioController::class,'calificar'])->name('comentarios.calificar');
 
     //Auth
     Route::get('/email/resend',[VerificationController::class,'resend'])->name('verification.resend');
