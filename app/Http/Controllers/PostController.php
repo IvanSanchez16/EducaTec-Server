@@ -122,6 +122,24 @@ class PostController extends Controller
 
     private function savePost($request){
         $user = Auth::user();
+
+        if ($request->exists('archivos')){
+            $archivos = $request->get('archivos');
+            foreach ($archivos as $archivo){
+                $aux = Archivo::find($archivo);
+
+                if ( $aux->arch_privado == 1 )
+                    return response()->json([
+                        'Mensaje' => 'No puedes postear archivos privados'
+                    ],400);
+                if ( $aux->arch_user != $user->nocontrol )
+                    return response()->json([
+                        'Mensaje' => 'No puedes postear archivos que no son tuyos'
+                    ],400);
+            }
+
+        }
+
         $post = Post::create([
             'post_user' => $user->nocontrol,
             'post_subtitle' => $request->get('subtitulo'),
@@ -150,7 +168,6 @@ class PostController extends Controller
         }
 
         if ($request->exists('archivos')){
-            $archivos = $request->get('archivos');
             foreach ($archivos as $archivo)
                 MaterialPost::create([
                     'mat_post' => $post->post_id,

@@ -21,6 +21,7 @@ class ArchivoController extends Controller
             'mat_nombre as materia',
             'arch_semestre as semestre',
             'archivos.path as path',
+            'arch_privado as privado',
             DB::raw('(DATE_FORMAT(archivos.updated_at,"%d/%m/%Y")) as fecha_modificacion'),
         ])
             ->join('materias','arch_materia','=','mat_id')
@@ -36,10 +37,25 @@ class ArchivoController extends Controller
                 'materia' => $archivo['materia'],
                 'semestre' => $archivo['semestre'],
                 'fecha_modificacion' => $archivo['fecha_modificacion'],
+                'privado' => $archivo['privado'] == 1,
                 'path' => $archivo['path']
             ];
         }
         return response()->json($mochila,200);
+    }
+
+    public function indexPublicos() {
+        $user = Auth::user();
+        $archivos = Archivo::select([
+            'arch_id as id',
+            'arch_nombre as nombre',
+        ])
+            ->join('materias','arch_materia','=','mat_id')
+            ->where('arch_user',$user->nocontrol)
+            ->where('arch_privado',0)
+            ->get();
+
+        return response()->json($archivos);
     }
 
     public function store(ArchivoRequest $request) {
