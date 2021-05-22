@@ -23,8 +23,8 @@ class ArchivoRequest extends FormRequest
      */
     public function rules()
     {
-        $method = $this->method();
-        if ($method == 'POST')
+        $url = $this->route()->uri;
+        if ($url == 'api/mochila/archivo')
             return [
                 'archivo' => 'required|file',
                 'materia' => 'required|exists:materias,mat_id',
@@ -33,11 +33,11 @@ class ArchivoRequest extends FormRequest
                 'path' => 'required'
             ];
         return [
-            'archivo' => 'required|file',
+            'nombre' => 'string',
             'materia' => 'exits:materias,mat_id',
             'semestre' => 'numeric',
             'privado' => 'boolean',
-            'path' => 'required'
+            'path' => 'string'
         ];
     }
 }

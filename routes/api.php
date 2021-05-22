@@ -4,6 +4,7 @@ use App\Http\Controllers\ArchivoController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\MochilaController;
 use App\Http\Controllers\PostController;
@@ -57,6 +58,12 @@ Route::middleware(['auth:sanctum'])->group(function (){
     Route::post('/mochila/archivo',[ArchivoController::class,'store']);
     Route::delete('/mochila/archivo/{archivo}',[ArchivoController::class,'destroy'])->name('archivos.destroy');
     Route::get('/mochila/descargar/{archivo}',[ArchivoController::class,'descargar'])->name('archivos.descargar');
+    Route::put('/mochila/modificar/{archivo}',[ArchivoController::class,'update'])->name('archivos.update');
+
+    //Foro
+    Route::get('/foro',[PostController::class,'indexForo']);
+    Route::post('/foro',[PostController::class,'storeForo']);
+    Route::post('/calificar/comentario/{comentario}',[ComentarioController::class,'calificar'])->name('comentarios.calificar');
 
     //Auth
     Route::get('/email/resend',[VerificationController::class,'resend'])->name('verification.resend');

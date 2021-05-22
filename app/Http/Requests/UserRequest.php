@@ -33,11 +33,7 @@ class UserRequest extends FormRequest
             ];
         //else
         return [
-            'nombre' => 'max:255',
-            'apellidos' => 'max:255',
-            'email' => 'email|unique:users',
             'semestre' => 'numeric',
-            'password' => 'min:8|confirmed',
             'carrera' => 'exists:carreras,car_id',
             'foto' => 'file'
         ];
