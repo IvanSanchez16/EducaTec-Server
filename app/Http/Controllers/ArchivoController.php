@@ -74,11 +74,10 @@ class ArchivoController extends Controller
         $path = '/'.$user->nocontrol.$request->get('path');
         $archivo->storeAs($path,$archivo->getClientOriginalName());
 
-        Archivo::create($fieldsArch);
+        $archObj = Archivo::create($fieldsArch);
 
-        return response()->json([
-            "Mensaje" => 'Archivo subido exitosamente'
-        ],201);
+
+        return response()->json($archObj->show(),201);
     }
 
 

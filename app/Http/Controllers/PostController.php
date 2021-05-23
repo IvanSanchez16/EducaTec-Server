@@ -97,27 +97,11 @@ class PostController extends Controller
     }
 
     public function store(PostRequest $request) {
-        $response = $this->savePost($request);
-        if ($response)
-            return response()->json([
-                'Mensaje' => 'Post creado correctamente'
-            ],201);
-        else
-            return response()->json([
-                'Mensaje' => 'Error al crear el post'
-            ],500);
+        return $this->savePost($request);
     }
 
     public function storeForo(ForoRequest $request){
-        $response = $this->savePost($request);
-        if ($response)
-            return response()->json([
-                'Mensaje' => 'Post creado correctamente'
-            ],201);
-        else
-            return response()->json([
-                'Mensaje' => 'Error al crear el post'
-            ],500);
+        return $this->savePost($request);
     }
 
     private function savePost($request){
@@ -175,7 +159,9 @@ class PostController extends Controller
                 ]);
         }
 
-        return true;
+        return response()->json([
+            'Mensaje' => 'Post creado correctamente'
+        ],201);
     }
 
     public function calificar(CalificarRequest $request,Post $post) {

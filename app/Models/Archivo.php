@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Archivo extends Model
 {
@@ -56,4 +57,16 @@ class Archivo extends Model
         return $this->belongsToMany(Post::class,'materialposts','mat_arch','mat_post');
     }
 
+    public function show() {
+        $materia = Materia::select('mat_nombre')->where('mat_id',$this->arch_materia)->first();
+        return [
+            'id' => $this->arch_id,
+            'nombre' => $this->arch_nombre,
+            'materia' => $materia->mat_nombre,
+            'semestre' => $this->arch_semestre,
+            'fecha_modificacion' => date('d/m/Y',$this->updated_at),
+            'privado' => $this->arch_privado,
+            'path' => $this->path
+        ];
+    }
 }
