@@ -147,16 +147,17 @@ class PostController extends Controller
 
         if ($request->exists('archivos')){
             foreach ($archivos as $archivo){
-                $archivo->update([
+                $archObj = Archivo::find($archivo);
+                $archObj->update([
                     'arch_privado' => 0
                 ]);
-                $archivo->save();
+                $archObj->save();
                 MaterialPost::create([
                     'mat_post' => $post->post_id,
                     'mat_arch' => $archivo
                 ]);
             }
-                
+
         }
 
         return response()->json([
