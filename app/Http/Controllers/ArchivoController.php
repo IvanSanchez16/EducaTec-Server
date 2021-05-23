@@ -66,7 +66,8 @@ class ArchivoController extends Controller
             'arch_nombre' => $archivo->getClientOriginalName(),
             'arch_materia' => $request->get('materia'),
             'arch_semestre' => $request->get('semestre'),
-            'arch_privado' => $request->get('privado'),
+            //'arch_privado' => $request->get('privado'),
+            'arch_privado' => 1,
             'path' => $request->get('path'),
             'arch_user' => $user->nocontrol
         ];

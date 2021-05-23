@@ -111,17 +111,11 @@ class PostController extends Controller
             $archivos = $request->get('archivos');
             foreach ($archivos as $archivo){
                 $aux = Archivo::find($archivo);
-
-                if ( $aux->arch_privado == 1 )
-                    return response()->json([
-                        'Mensaje' => 'No puedes postear archivos privados'
-                    ],400);
                 if ( $aux->arch_user != $user->nocontrol )
                     return response()->json([
                         'Mensaje' => 'No puedes postear archivos que no son tuyos'
                     ],400);
             }
-
         }
 
         $post = Post::create([
@@ -152,11 +146,17 @@ class PostController extends Controller
         }
 
         if ($request->exists('archivos')){
-            foreach ($archivos as $archivo)
+            foreach ($archivos as $archivo){
+                $archivo->update([
+                    'arch_privado' => 0
+                ]);
+                $archivo->save();
                 MaterialPost::create([
                     'mat_post' => $post->post_id,
                     'mat_arch' => $archivo
                 ]);
+            }
+                
         }
 
         return response()->json([
