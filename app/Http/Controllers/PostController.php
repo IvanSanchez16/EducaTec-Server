@@ -11,6 +11,7 @@ use App\Models\Calificacion;
 use App\Models\Comentario;
 use App\Models\Desccomentarios;
 use App\Models\Descpost;
+use App\Models\Materia;
 use App\Models\MaterialPost;
 use App\Models\Post;
 use App\Models\User;
@@ -164,12 +165,28 @@ class PostController extends Controller
                     'mat_arch' => $archivo
                 ]);
             }
-
         }
 
-        return response()->json([
-            'Mensaje' => 'Post creado correctamente'
-        ],201);
+        $mat = Materia::select('mat_nombre')->find($post->post_materia);
+        $date = date_create($post->created_at);
+        $postObj = [
+            'id' => $post->post_id,
+            'nombre' => $user->nombre.' '.$user->apellido_paterno,
+            'subtitulo' => $post->post_subtitle,
+            'materia' => $mat->mat_nombre,
+            'fecha' => date_format($date,'d/m/Y'),
+            'texto' => $request->get('texto'),
+            'numComentarios' => 0,
+            'calificaciones' => [
+                'votosBuenos' => 0,
+                'votosMalos' => 0,
+                'votoPropio' => 1
+            ],
+            'semestre' => $this->getSemestre($user->semestre),
+            'fotoAutor' => $user->getURLFoto()
+        ];
+
+        return response()->json($postObj,201);
     }
 
     public function calificar(CalificarRequest $request,Post $post) {
