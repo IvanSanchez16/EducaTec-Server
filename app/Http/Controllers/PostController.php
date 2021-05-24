@@ -216,6 +216,7 @@ class PostController extends Controller
                 'com_user' => $user->nocontrol,
                 'com_post' => $post->post_id,
             ]);
+
         //Guardar texto
         $texto = $request->get('texto');
         if (strlen($texto) <= 255)
@@ -238,9 +239,23 @@ class PostController extends Controller
             }while( strlen($texto)>0 );
         }
 
-        return response()->json([
-            'Mensaje' => 'Comentario registrado correctamente'
-        ],201);
+        $date = date_create($comentario->created_at);
+        $comObj = [
+            'id' => $comentario->com_id,
+            'autor' => [
+                'nombre' => $user->nombre.' '.$user->apellido_paterno,
+                'foto' => $user->getURLFoto()
+            ],
+            'fecha' => date_format($date,'d/m/Y'),
+            'texto' => $request->get('texto'),
+            'calificaciones' => [
+                'votosBuenos' => 0,
+                'votosMalos' => 0,
+                'votoPropio' => 1
+            ]
+        ];
+
+        return response()->json($comObj,201);
     }
 
     public function show(Post $post) {

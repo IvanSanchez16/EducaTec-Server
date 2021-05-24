@@ -59,12 +59,14 @@ class Archivo extends Model
 
     public function show() {
         $materia = Materia::select('mat_nombre')->where('mat_id',$this->arch_materia)->first();
+        $date = date_create($this->updated_at);
+
         return [
             'id' => $this->arch_id,
             'nombre' => $this->arch_nombre,
             'materia' => $materia->mat_nombre,
             'semestre' => $this->arch_semestre,
-            'fecha_modificacion' => date('d/m/Y',$this->updated_at),
+            'fecha_modificacion' => date_format($date,'d/m/Y'),
             'privado' => $this->arch_privado,
             'path' => $this->path
         ];
