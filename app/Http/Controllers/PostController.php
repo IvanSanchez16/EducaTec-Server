@@ -40,6 +40,7 @@ class PostController extends Controller
                 'post_id as id',
                 DB::raw('(CONCAT(users.nombre," ",users.apellido_paterno)) as nombre'),
                 'post_user as user',
+                'users.semestre as UsSemestre',
                 'post_subtitle as subtitulo',
                 'mat_nombre as materia',
                 DB::raw('(DATE_FORMAT(posts.created_at,"%d/%m/%Y")) as fecha')
@@ -53,6 +54,7 @@ class PostController extends Controller
                 'post_id as id',
                 DB::raw('(CONCAT(users.nombre," ",users.apellido_paterno)) as nombre'),
                 'post_subtitle as subtitulo',
+                'users.semestre as UsSemestre',
                 'mat_nombre as materia',
                 DB::raw('(DATE_FORMAT(posts.created_at,"%d/%m/%Y")) as fecha')
             ])
@@ -81,6 +83,10 @@ class PostController extends Controller
                 'votosMalos' => $votosMalas,
                 'votoPropio' => $votoPropio
             ];
+
+            //Semestre
+            $post['semestre'] = $this->getSemestre($post->UsSemestre);
+            unset($post['UsSemestre']);
 
             //Autor foto
             $autor = User::find($post['user']);
@@ -243,6 +249,7 @@ class PostController extends Controller
             'post_id as id',
             DB::raw('(CONCAT(users.nombre," ",users.apellido_paterno)) as nombre'),
             'post_subtitle as subtitulo',
+            'users.semestre as UsSemestre',
             'mat_nombre as materia',
             'post_user as user',
             DB::raw('(DATE_FORMAT(posts.created_at,"%d/%m/%Y")) as fecha')
@@ -258,6 +265,10 @@ class PostController extends Controller
         //Comentarios
         $Comentarios = $post->Comentarios();
         $postDetails['Comentarios'] = $Comentarios;
+
+        //Semestre
+        $post['semestre'] = $this->getSemestre($post->UsSemestre);
+        unset($post['UsSemestre']);
 
         //Calificacion
         $votosBuenos = Calificacion::where('cal_id',$postDetails->id)->where('cal_post',1)->where('cal_calificacion',1)->count();
@@ -290,5 +301,43 @@ class PostController extends Controller
 
     public function destroy(Post $post) {
         //
+    }
+
+    private function getSemestre($semestre) {
+        switch ($semestre){
+            case 1:
+                return '1ro';
+            case 2:
+                return '2do';
+            case 3:
+                return '3ro';
+            case 4:
+                return '4to';
+            case 5:
+                return '5to';
+            case 6:
+                return '6to';
+            case 7:
+                return '7mo';
+            case 8:
+                return '8vo';
+            case 9:
+                return '9no';
+            case 10:
+                return '10mo';
+            case 11:
+                return '11vo';
+            case 12:
+                return '12vo';
+            case 13:
+                return '13vo';
+            case 14:
+                return '14vo';
+            case 15:
+                return '15vo';
+            case 16:
+                return '16vo';
+
+        }
     }
 }
