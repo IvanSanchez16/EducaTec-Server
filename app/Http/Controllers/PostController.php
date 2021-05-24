@@ -53,6 +53,7 @@ class PostController extends Controller
             $posts = Post::select([
                 'post_id as id',
                 DB::raw('(CONCAT(users.nombre," ",users.apellido_paterno)) as nombre'),
+                'post_user as user',
                 'post_subtitle as subtitulo',
                 'users.semestre as UsSemestre',
                 'mat_nombre as materia',
