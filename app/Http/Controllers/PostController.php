@@ -211,13 +211,13 @@ class PostController extends Controller
                 'cal_calificacion' => $calificacion
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'Mensaje' => 'Calificado correctamente'
-            ]);
+            $califico = Calificacion::where('cal_id',$post->post_id)->where('cal_post',1)->where('cal_user',$user->nocontrol)->where('cal_calificacion',$calificacion);
+            $califico->delete();
+            return response()->json(['votoPropio' => 1]);
         }
 
         return response()->json([
-           'Mensaje' => 'Calificado correctamente'
+           'votoPropio' => $calificacion ? 2 : 0
         ]);
     }
 
