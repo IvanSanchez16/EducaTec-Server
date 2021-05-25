@@ -300,8 +300,8 @@ class PostController extends Controller
         $postDetails['Comentarios'] = $Comentarios;
 
         //Semestre
-        $post['semestre'] = $this->getSemestre($post->UsSemestre);
-        unset($post['UsSemestre']);
+        $postDetails['semestre'] = $this->getSemestre($postDetails->UsSemestre);
+        unset($postDetails['UsSemestre']);
 
         //Calificacion
         $votosBuenos = Calificacion::where('cal_id',$postDetails->id)->where('cal_post',1)->where('cal_calificacion',1)->count();
