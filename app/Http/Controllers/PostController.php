@@ -196,6 +196,9 @@ class PostController extends Controller
                 "Error" => 'No puedes votar tus propios posts o comentarios'
             ],401);
 
+        $votosBuenos = Calificacion::where('cal_id',$post->id)->where('cal_post',1)->where('cal_calificacion',1)->count();
+        $votosMalas = Calificacion::where('cal_id',$post->id)->where('cal_post',1)->where('cal_calificacion',0)->count();
+
         $calificacion = $request->get('voto');
         $calificacion = $calificacion == "1";
         $califico = Calificacion::where('cal_id',$post->post_id)->where('cal_post',1)->where('cal_user',$user->nocontrol)->where('cal_calificacion',(!$calificacion));
@@ -213,11 +216,24 @@ class PostController extends Controller
         } catch (\Exception $e) {
             $califico = Calificacion::where('cal_id',$post->post_id)->where('cal_post',1)->where('cal_user',$user->nocontrol)->where('cal_calificacion',$calificacion);
             $califico->delete();
-            return response()->json(['votoPropio' => 1]);
+            if ($calificacion)
+                $votosBuenos--;
+            else
+                $votosMalas--;
+            return response()->json([
+                'votosBuenos' => $votosBuenos,
+                'votosMalos' => $votosMalas,
+                'votoPropio' => 1
+            ]);
         }
-
+        if ($calificacion)
+            $votosBuenos++;
+        else
+            $votosMalas++;
         return response()->json([
-           'votoPropio' => $calificacion ? 2 : 0
+            'votosBuenos' => $votosBuenos,
+            'votosMalos' => $votosMalas,
+            'votoPropio' => $calificacion ? 2 : 0
         ]);
     }
 
