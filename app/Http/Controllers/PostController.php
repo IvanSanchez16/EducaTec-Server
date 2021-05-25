@@ -196,8 +196,8 @@ class PostController extends Controller
                 "Error" => 'No puedes votar tus propios posts o comentarios'
             ],401);
 
-        $votosBuenos = Calificacion::where('cal_id',$post->id)->where('cal_post',1)->where('cal_calificacion',1)->count();
-        $votosMalas = Calificacion::where('cal_id',$post->id)->where('cal_post',1)->where('cal_calificacion',0)->count();
+        $votosBuenos = Calificacion::where('cal_id',$post->post_id)->where('cal_post',1)->where('cal_calificacion',1)->count();
+        $votosMalas = Calificacion::where('cal_id',$post->post_id)->where('cal_post',1)->where('cal_calificacion',0)->count();
 
         $calificacion = $request->get('voto');
         $calificacion = $calificacion == "1";
