@@ -35,7 +35,7 @@ class UserRequest extends FormRequest
         return [
             'semestre' => 'numeric',
             'carrera' => 'exists:carreras,car_id',
-            'foto' => 'file'
+            'Foto' => 'file'
         ];
     }
 

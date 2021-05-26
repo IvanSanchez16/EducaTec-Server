@@ -28,8 +28,8 @@ class UserController extends Controller
 
     public function update(UserRequest $request) {
         $user = Auth::user();
-        if ($request->exists('foto'))
-            $user->cambiarFoto( $request->file('foto') );
+        if ($request->exists('Foto'))
+            $user->cambiarFoto( $request->file('Foto') );
 
         $nuevoRequest = [];
         if ($request->exists('semestre'))
