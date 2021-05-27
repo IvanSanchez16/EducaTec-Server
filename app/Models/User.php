@@ -69,6 +69,15 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function cambiarFoto($foto){
         $path = '/public/Fotos';
+        $fotoAct = $this->getURLFoto();
+        if (substr($fotoAct,strlen($fotoAct)-11) == 'Default.png'){
+            $foto->storeAs($path,$this->nocontrol.'.'.$foto->extension());
+            return;
+        }
+        $nombreFoto = explode('/',$fotoAct);
+        $nombreFoto = $nombreFoto[count($nombreFoto)-1];
+
+        Storage::disk('public')->delete('/Fotos/'.$nombreFoto);
         $foto->storeAs($path,$this->nocontrol.'.'.$foto->extension());
     }
 
